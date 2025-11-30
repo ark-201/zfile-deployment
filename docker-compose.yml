@@ -1,0 +1,18 @@
+services:
+  zfile:
+    # 使用 ZFile 4.4.0 版本镜像（官方镜像标签需确认，此处为示例）
+    image: docker.io/zhaojun1998/zfile:4.5.0
+    container_name: zfile
+    restart: always  # 容器退出后自动重启
+    ports:
+      - "1180:8080"  # 宿主机端口:容器内端口（可根据需求修改宿主机端口，如 1180:8080）
+    volumes:
+      # 持久化数据目录（配置、文件、日志等），映射到当前目录下的子文件夹
+      - ./data:/root/.zfile/data
+      - ./logs:/root/.zfile/logs
+      - ./conf:/root/.zfile/conf
+      # 新增：将宿主机的 /mnt/sdb/zfile/data 映射到容器内的 /zfile-share
+      - /D/zfile/data:/zfile-share
+      - ./db:/root/.zfile/db  # 数据库文件（4.4.0 可能使用 SQLite）
+    environment:
+      - TZ=Asia/Shanghai  # 时区设置为上海
