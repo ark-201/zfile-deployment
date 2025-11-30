@@ -5,41 +5,89 @@
 ZFile 是一个开源在线网盘程序，主打轻量、易用、多存储支持，适用于个人或小团队文件管理场景。
 
 **核心功能:**
-- 多存储支持：本地存储、对象存储（S3/OSS）、WebDAV等
+- 多存储支持：本地存储、对象存储（S3/OSS）等
 - 文件预览：支持文档、视频、音频、图片等60+格式
 - 分享功能：生成直链/短链、设置密码和有效期
-- 权限管理：多用户角色、文件夹权限控制
-- 简洁界面：响应式设计，支持深色模式
   
 **技术栈：**
 - 后端：Java Spring Boot
 - 前端：Vue.js + Element UI
 - 数据库：默认H2（嵌入式），支持MySQL
 - 部署方式：可通过JAR包、Docker或源码构建
-  
-**典型应用场景：**
-- 个人文件云同步
-- 团队内部文件共享
-- 轻量级企业网盘
-- 开发环境资源管理
-  
-**项目优势：**
-- 零依赖部署：内置H2数据库，无需额外配置
-- 静态资源优化：前端资源预编译，加载速度快
-- 丰富扩展：支持插件机制和API集成
-- 活跃社区：GitHub 10k+ Star，持续更新维护
+
 官方仓库：https://github.com/zfile-dev/zfile
 
-## 第一步获取项目代码
-- 通过Git克隆到本地
-```shell
-git clone https://github.com/zfile-dev/zfile.git
-cd zfile  # 进入项目根目录
-```
-- 或打开项目地址 https://github.com/zfile-dev/zfile.git 并下载到本地
-<img width="1280" height="724" alt="image" src="https://github.com/user-attachments/assets/c8ecaeac-e578-4839-9c74-7ad7b552743a" />
+## 部署方案增强说明
 
-## 第二步准备环境
+### 1. 部署方案核心定位与适用人群 
+
+**核心价值：** 基于ZFile官方项目的容器化部署增强方案，聚焦解决Windows环境下的部署痛点，提供开箱即用的Docker Compose配置与问题解决方案。
+
+**适用人群画像：**
+
+| 人群类型       | 技术背景要求     | 典型使用场景                     |
+|----------------|------------------|---------------------------------|
+| 个人用户/开发者 | 基础命令行操作能力 | 本地搭建个人网盘、开发环境文件共享 |
+| 小团队(3-10人) |了解Docker基础概念 | 团队内部轻量文件协作、临时项目共享 |
+| 技术爱好者      | 具备问题排查能力	| 学习容器化部署、网络代理配置实践   |
+
+不适用场景：企业级生产环境、无技术背景纯小白用户。
+
+### 2. 相比官方项目的核心改进 
+
+| 优化维度    | 官方项目现状                    |    本方案改进点              |
+|:------------|:-------------------------------:|-----------------------------:|
+| 部署复杂度   | 需手动配置JDK/Maven、编译前端资源 | 全程Docker化，一行命令启动服务 |
+| 环境兼容性   | 对Windows支持不足                | 解决WSL2环境变量冲突          |
+| 问题解决能力 | 文档仅覆盖基础流程                | 提供8类典型错误分步排查指南    |
+| 操作性      | 无可视化指引                      | 20+步骤截图（含环境变量配置）  |
+
+
+### 3. 核心注意事项与风险提示  
+
+1. 环境配置风险
+
+- 版本匹配：JDK需21+，Maven需3.9.11+，Docker镜像标签需核对官方最新版本（当前文档使用4.5.0，建议访问Docker Hub确认）。
+
+- 路径规范：Docker Compose命令必须在`docker-compose.yml`所在目录执行（如`D:\zfile`），否则会报"配置文件不存在"错误。
+
+2. 网络与镜像风险
+
+- 镜像拉取：国内网络需配置Docker镜像加速器（文档提供阿里云/ DaoCloud镜像地址），否则会出现registry-1.docker.io连接超时。
+
+- 端口占用：默认映射1180端口，若冲突需修改docker-compose.yml的ports字段（格式：宿主机端口:8080），不可直接修改容器内端口。
+
+3. 数据安全与维护
+
+- 数据持久化：./data目录映射容器内文件存储，删除该目录会导致数据丢失，建议定期备份`docker cp zfile:/root/.zfile/data ./backup ` 
+
+- 服务启停：必须使用`docker-compose down`停止服务，直接删除容器会导致配置残留（可通过`docker rm -f zfile`强制清理残留容器）。
+
+### 4. 与官方部署方案的核心差异 
+
+|对比维度 | 官方部署方案-源码模式 | 本容器化方案-Docker模式 |
+|:--------|:---------------------:|-----------------------:|
+| 环境依赖 | JDK+Maven+Node.js     | 仅需Docker环境         |
+| 更新方式 | 需重新下载源码并构建    | 修改镜像标签即可        |
+
+### 部署路径选择指南
+|    方案类型       |      适用场景      |        核心优势             |
+|:------------------|:------------------:|----------------------------:|
+|Docker Compose部署 | 快速启动、环境隔离   | 规避静态资源问题，更快完成部署 |
+| 源码构建部署       | 二次开发、自定义功能 | 深度定制化，适合技术开发场景   |
+
+
+## 准备环境
+
+**环境支持清单**
+
+| 环境/工具       | 最低版本 | 推荐版本       | 备注                  |  
+|----------------|----------|----------------|-----------------------|  
+| Windows        | 10 20H2  | 11 专业版      | 需开启 WSL 2           |  
+| Docker Desktop | 4.0      | 4.28.0         | 支持 Compose V2       |  
+| JDK            | 8        | 21 (LTS)       | 仅源码构建需安装      |  
+| 网络要求       | -        | 稳定带宽 ≥1Mbps | 镜像拉取阶段需联网    |  
+
 
 **支持的终端环境**
 - Windows：Git Bash 或 PowerShell（不推荐cmd）
@@ -53,36 +101,69 @@ cd zfile  # 进入项目根目录
 - 服务器开放对应端口（默认1180）
 
 ### JDK 21的安装步骤
-<img width="778" height="591" alt="image" src="https://github.com/user-attachments/assets/7cdf18f2-bbb5-475c-a714-754aa06dd32a" />
+<img width="778" height="591" alt="image" src="https://github.com/user-attachments/assets/a4b8a8b1-bd43-45f4-8f6b-646cf64b316d" />
 
-<img width="775" height="584" alt="image" src="https://github.com/user-attachments/assets/8e5cc9bd-9630-4e02-9614-237ae8eb13a8" />
+<img width="775" height="584" alt="image" src="https://github.com/user-attachments/assets/f6fa9228-c9cc-4d15-8453-bf08d7ab4aae" />
 
-<img width="783" height="589" alt="image" src="https://github.com/user-attachments/assets/e418e251-b201-4105-8e0b-4bd19b0c4644" />
+<img width="783" height="589" alt="image" src="https://github.com/user-attachments/assets/54c64d97-e5f5-4451-aca6-71f33e755db7" />
+
 
 
 **开始配置环境变量（在此以Windows11为例）**
-<img width="1280" height="814" alt="image" src="https://github.com/user-attachments/assets/798962c5-168d-44ef-9d5e-a32df213a20a" />
+<img width="1280" height="814" alt="image" src="https://github.com/user-attachments/assets/d65eddf3-e3ca-45c8-a5e6-9a1839bf3865" />
 
-<img width="1280" height="807" alt="image" src="https://github.com/user-attachments/assets/e922bba4-bd95-480b-b253-6114c105cc28" />
 
-<img width="1267" height="955" alt="image" src="https://github.com/user-attachments/assets/6a40d246-3f0c-4261-8370-343bcb337363" />
+<img width="1280" height="807" alt="image" src="https://github.com/user-attachments/assets/49cd2caa-0771-4381-b543-cb727161ae54" />
 
-<img width="959" height="921" alt="image" src="https://github.com/user-attachments/assets/ba8de43c-a371-489b-a69f-037d97d06fbf" />
 
-<img width="819" height="795" alt="image" src="https://github.com/user-attachments/assets/877aa37b-f47a-41a0-b902-b9dfe37421d8" />
+<img width="959" height="921" alt="image" src="https://github.com/user-attachments/assets/65e07c60-302b-4328-a4ea-443f937697b8" />
 
-<img width="760" height="136" alt="image" src="https://github.com/user-attachments/assets/cb44c39e-ed3c-47ff-a7dd-6ab60c062400" />
+
+<img width="1267" height="955" alt="image" src="https://github.com/user-attachments/assets/77b49720-1220-4f00-8bfa-e16bc6079c4c" />
+
+
+<img width="819" height="795" alt="image" src="https://github.com/user-attachments/assets/fbf6a195-4305-4a8b-8926-0c864e64a469" />
+
+
+<img width="760" height="136" alt="image" src="https://github.com/user-attachments/assets/dc16ccfc-e21b-463d-a632-700b16d5d06e" />
+
 
 
 ### Maven的安装步骤
-<img width="1280" height="615" alt="image" src="https://github.com/user-attachments/assets/fac19dbc-843e-41ef-8fa0-f9a31b0ea755" />
-
-<img width="1280" height="903" alt="image" src="https://github.com/user-attachments/assets/b9322eb4-93ff-4e3b-82e4-7ab5b147ce2f" />
-
-<img width="979" height="1023" alt="image" src="https://github.com/user-attachments/assets/5e8cc290-c3be-48d3-9b94-42fc2d11b861" />
+<img width="1280" height="615" alt="image" src="https://github.com/user-attachments/assets/82a272b9-ad68-4a1d-aeef-943329a0ed6b" />
 
 
-### 🛠在配置环境变量中出现的问题：
+<img width="1280" height="903" alt="image" src="https://github.com/user-attachments/assets/9e7e89c4-fbac-43aa-bea8-56dbacb4ac33" />
+
+
+<img width="979" height="1023" alt="image" src="https://github.com/user-attachments/assets/9324d05c-5bf3-4c9d-93f4-710d4775a150" />
+
+### 下载 Docker Desktop
+
+访问：https://www.docker.com/products/docker-desktop/
+
+下载：`Docker Desktop Installer.exe`
+
+安装步骤：https://blog.csdn.net/Natsuago/article/details/145588600
+
+安装过程中可能会遇到
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/4fb5a985-17b3-45e9-8843-22bf84e288a9" />
+
+
+这一步是必须要做的，如果下载很慢或者会中断请直接 https://github.com/microsoft/WSL/releases 离线下载 wsl.2.6.1.0.x64.msi ，双击运行后按安装向导完成安装。安装完成后**重启电脑** 在Git Bash中输入`wsl --status`显示出`默认版本：2`即为成功。
+
+汉化教程（可选）： https://zhuanlan.zhihu.com/p/1936741564148852515  （docker默认安装的根目录是`C:\Program Files\Docker`）
+
+注意：Docker Desktop安装完成后要重启电脑
+
+验证安装：
+```shell
+#电脑重启后，打开Git bash：
+docker --version
+docker compose version
+```
+
+### 🛠环境配置常见问题：
 **JDK的问题描述**
 
 在 Windows 系统上配置 Java 开发环境时，虽然已正确安装 JDK 21，但在命令行中直接运行 `java -version` 和 `javac `命令时无任何输出，无法正常使用 Java 命令。
@@ -190,32 +271,11 @@ source ~/.bashrc
 1. 立即验证：运行 mvn -version 正常显示版本信息
 2. 持久性验证：关闭并重新打开 Git Bash，确认配置依然有效
 3. 路径验证：确认 Maven 命令现在可以在 Git Bash 中直接使用
-<img width="1086" height="515" alt="image" src="https://github.com/user-attachments/assets/15c4bd0a-1158-4995-9526-03e8e0843ea3" />
+<img width="1086" height="515" alt="image" src="https://github.com/user-attachments/assets/6a1f8bf4-ff46-4a2e-8c64-565367255aa5" />
 
-### 下载 Docker Desktop
 
-访问：https://www.docker.com/products/docker-desktop/
 
-下载：`Docker Desktop Installer.exe`
-
-安装步骤：https://blog.csdn.net/Natsuago/article/details/145588600
-
-安装过程中可能会遇到
-<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/10ed7736-910b-4f8d-adac-b67fd89ec72d" />
-
-这一步是必须要做的，如果下载很慢或者会中断请直接 https://github.com/microsoft/WSL/releases 离线下载 wsl.2.6.1.0.x64.msi ，双击运行后按安装向导完成安装。安装完成后**重启电脑** 在Git Bash中输入`wsl --status`显示出`默认版本：2`即为成功。
-
-汉化教程（可选）： https://zhuanlan.zhihu.com/p/1936741564148852515  （docker默认安装的根目录是`C:\Program Files\Docker`）
-
-注意：Docker Desktop安装完成后要重启电脑
-
-验证安装：
-```shell
-#电脑重启后，打开Git bash：
-docker --version
-docker compose version
-```
-## 第三步Docker Compose部署流程
+## Docker Compose部署流程
 原"源码解压+本地构建"方案已废弃（存在静态资源编译步骤缺失问题）
 1. 创建部署目录
 ```shell
@@ -264,10 +324,29 @@ http://ipv4:1180
 #ipv4就是在cmd中输出ipconfig的无线局域网
 #直接设置你的账号密码然后系统初始化登录进去就可以了
 ```
-<img width="1120" height="632" alt="image" src="https://github.com/user-attachments/assets/4f84830d-f757-4dc6-99cf-c1b02e6a7e64" />
+<img width="1120" height="632" alt="image" src="https://github.com/user-attachments/assets/ab3654a9-9646-4fe1-a100-d7fcf381c770" />
 
 
-### 🛠部署过程中遇到的问题
+## 源码构建部署流程（仅二次开发）
+
+1. 获取项目代
+```shell
+git clone https://github.com/zfile-dev/zfile.git  
+cd zfile  
+```
+2. 构建项目
+```shell
+mvn clean package -DskipTests  
+```
+⚠️ 注意：若出现静态资源缺失，需先执行前端编译：
+```shell
+cd frontend && npm install && npm run build && cd ..
+```
+3. 启动服务
+```shell
+java -jar target/zfile.jar  
+```
+### 🛠部署常见问题解决方案
 
 **问题描述**
 
@@ -293,6 +372,8 @@ ping registry.cn-hangzhou.aliyuncs.com
 - 结果显示超时，无法连接到 Docker Hub
 
 **第二阶段：DNS 和镜像加速器配置**
+<img width="926" height="586" alt="image" src="https://github.com/user-attachments/assets/c981870d-6f27-47cb-927d-a6404642cce2" />
+
 - 配置 Docker 镜像加速器：
 
 ```json
@@ -357,33 +438,36 @@ docker pull zhaojun1998/zfile:4.0.0
 2. 执行镜像拉取：`docker pull zhaojun1998/zfile:4.5.0`
 3. 镜像成功下载到本地后，关闭 VPN
 4. 正常启动服务：`docker compose up -d`
-<img width="1141" height="114" alt="image" src="https://github.com/user-attachments/assets/a0ae1c78-77bb-4448-84e7-79dddcbecb16" />
+<img width="1141" height="114" alt="image" src="https://github.com/user-attachments/assets/90d65c4f-6afb-4b1a-ac00-2ca7869ec07b" />
+
 
 **验证与结果**
 - 服务状态验证：`docker compose ps `显示容器正常运行
 - 端口映射：`0.0.0.0:1180->8080/tcp `正确配置
 - 服务访问：通过` http://localhost:1180` 成功访问 ZFile 界面
 - 关键发现：只需在镜像下载阶段使用代理，后续服务运行无需代理支持
-<img width="1280" height="470" alt="image" src="https://github.com/user-attachments/assets/d23cb150-0124-44e6-8ff6-a06b5dbb58bc" />
+<img width="1280" height="470" alt="image" src="https://github.com/user-attachments/assets/1c6de988-17ee-45bd-952c-87ccb6567dbe" />
 
-<img width="1280" height="725" alt="image" src="https://github.com/user-attachments/assets/2a2497ab-dcf0-4883-86f7-44b4c060b749" />
 
-## 系统配置
+<img width="1280" height="725" alt="image" src="https://github.com/user-attachments/assets/1e6a429b-0e90-4815-b1d0-9b385133e535" />
+
+
+## 系统配置与使用
 **首页配置：** 主要设置一下**最大同时上传文件数**
-<img width="1280" height="621" alt="image" src="https://github.com/user-attachments/assets/b203568d-11c6-44c2-801b-6825fc8adedb" />
+<img width="1280" height="621" alt="image" src="https://github.com/user-attachments/assets/be4e3ec7-71cb-4a63-bba2-057e774e5587" />
 
-**设置存储：** 这里的文件路径对应docker-compose里面的`/D/zfile/data:/zfile-share`
-<img width="1280" height="612" alt="image" src="https://github.com/user-attachments/assets/d5b18743-0bc3-444f-8547-874ce55944d0" />
+**存储配置：** 这里的文件路径对应docker-compose里面的`/D/zfile/data:/zfile-share`
+<img width="1280" height="612" alt="image" src="https://github.com/user-attachments/assets/78c4d7b1-f044-4066-934a-497e8ddd812d" />
 
 **访问首页**
-<img width="1625" height="256" alt="image" src="https://github.com/user-attachments/assets/135ff1a6-0b0e-4787-b28d-3e7d15fe6f62" />
+<img width="1625" height="256" alt="image" src="https://github.com/user-attachments/assets/97da8bff-888e-4d97-9c0a-f734452dd3de" />
 
 **新建文件夹上传文件**
-<img width="1280" height="392" alt="image" src="https://github.com/user-attachments/assets/caa2911e-5d11-4b21-bca0-1c6b7f8321cd" />
+<img width="1280" height="392" alt="image" src="https://github.com/user-attachments/assets/39e0e472-63de-4edf-9e84-332377fd950b" />
 
-<img width="1280" height="319" alt="image" src="https://github.com/user-attachments/assets/4b3819be-0ee6-481a-b7a3-5199c2398cf3" />
+<img width="1280" height="319" alt="image" src="https://github.com/user-attachments/assets/84326331-0ee5-4089-9b0a-9f51f70cb608" />
 
-<img width="1280" height="297" alt="image" src="https://github.com/user-attachments/assets/dd940430-1664-4104-83e6-cb0a8b8eaf88" />
+<img width="1280" height="297" alt="image" src="https://github.com/user-attachments/assets/78b77ff9-73eb-413d-8e7a-8c7368009084" />
 
 **内网映射**
 
@@ -392,37 +476,34 @@ docker pull zhaojun1998/zfile:4.0.0
 先决条件：
 - 有路由器（有公网IP的意思）
 - 下载FRP+购买云主机（要用他的公网IP）
-<img width="1147" height="646" alt="image" src="https://github.com/user-attachments/assets/3b8c052f-3ea5-42a2-be70-bc29aaf6ce55" />
+<img width="1147" height="646" alt="image" src="https://github.com/user-attachments/assets/8c4fcb66-0d3c-43c3-b816-143715b0e62a" />
 
-<img width="1158" height="663" alt="image" src="https://github.com/user-attachments/assets/b36bfd95-3aff-4f0a-b51e-1143809a1642" />
+
+<img width="1158" height="663" alt="image" src="https://github.com/user-attachments/assets/49fc1c3d-38ab-43ec-bf16-8b74b04523e6" />
+
 
 ## 本地访问流程
 注意：仅支持同一局域网内（手机热点）的其他设备访问（手机、平板等）
 
-**启动服务**
-
 在Git Bash中执行：
 ```shell
+#启动服务
 cd /D/zfile  # 进入docker-compose.yml所在目录
 docker-compose up -d  # 启动ZFile容器
+# 获取本地IP  
+ipconfig | findstr "IPv4"
+# 浏览器访问  
+本地IP:1180  
 ```
 
-**获取本地IP**
-
-- Windows：在命令提示符输入 ipconfig，找到"无线局域网适配器WLAN"下的IPv4地址（如 `192.168.43.123`，手机热点分配的局域网IP）
-- Linux/macOS：终端输入` ifconfig `或` ip addr`，查看无线网卡的IP
-
-**浏览器访问**
-
-输入` 本地IP:1180`（如 `192.168.43.123:1180`），即可打开ZFile登录页面
-
-**服务状态检查：**
+**服务管理命令：**
   
   ```shell
 docker compose ps  # 查看容器状态
 docker compose logs -f  # 查看实时日志
-```
-**关闭服务**
-```shell
+#关闭服务
 docker compose down
 ```
+
+
+
