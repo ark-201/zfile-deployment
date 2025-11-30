@@ -1,4 +1,4 @@
-# ZFile 云盘 - Docker 环境深度配置与排障实战
+# ZFile 云盘容器化部署：从单体到多服务编排的架构实践
 ## 本项目基于 [zfile(https://github.com/zfile-dev/zfile)] 进行复刻和修改，感谢原作者的贡献
 ## 项目概述：
 **项目定位：**
