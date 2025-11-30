@@ -101,42 +101,31 @@ ZFile 是一个开源在线网盘程序，主打轻量、易用、多存储支�
 - 服务器开放对应端口（默认1180）
 
 ### JDK 21的安装步骤
-<img width="778" height="591" alt="image" src="https://github.com/user-attachments/assets/a4b8a8b1-bd43-45f4-8f6b-646cf64b316d" />
-
-<img width="775" height="584" alt="image" src="https://github.com/user-attachments/assets/f6fa9228-c9cc-4d15-8453-bf08d7ab4aae" />
-
-<img width="783" height="589" alt="image" src="https://github.com/user-attachments/assets/54c64d97-e5f5-4451-aca6-71f33e755db7" />
+<img width="778" height="591" alt="image" src="https://github.com/user-attachments/assets/8690b6bb-17b6-4a1f-8649-8e7376d2161e" />
+<img width="775" height="584" alt="image" src="https://github.com/user-attachments/assets/f47f6203-8243-409b-8357-ca01bbe1f147" />
+<img width="783" height="589" alt="image" src="https://github.com/user-attachments/assets/dad627d3-6c91-402a-9a4b-0b64f2ee2184" />
 
 
 
 **开始配置环境变量（在此以Windows11为例）**
-<img width="1280" height="814" alt="image" src="https://github.com/user-attachments/assets/d65eddf3-e3ca-45c8-a5e6-9a1839bf3865" />
+<img width="1280" height="814" alt="image" src="https://github.com/user-attachments/assets/5447b585-c620-4b2e-88c5-ef5489e27d8c" />
 
+<img width="1280" height="807" alt="image" src="https://github.com/user-attachments/assets/c527ced9-bd5c-4467-af4b-4e2f4c79aa87" />
 
-<img width="1280" height="807" alt="image" src="https://github.com/user-attachments/assets/49cd2caa-0771-4381-b543-cb727161ae54" />
+<img width="1267" height="955" alt="image" src="https://github.com/user-attachments/assets/bb4f2a9e-0383-41b3-999a-e0ff636ba677" />
 
+<img width="959" height="921" alt="image" src="https://github.com/user-attachments/assets/28564cd0-a87d-4c10-95cd-9000bbc893ac" />
 
-<img width="959" height="921" alt="image" src="https://github.com/user-attachments/assets/65e07c60-302b-4328-a4ea-443f937697b8" />
+<img width="819" height="795" alt="image" src="https://github.com/user-attachments/assets/60c05211-8a90-4c27-8cdc-e19fc3d4dd64" />
 
-
-<img width="1267" height="955" alt="image" src="https://github.com/user-attachments/assets/77b49720-1220-4f00-8bfa-e16bc6079c4c" />
-
-
-<img width="819" height="795" alt="image" src="https://github.com/user-attachments/assets/fbf6a195-4305-4a8b-8926-0c864e64a469" />
-
-
-<img width="760" height="136" alt="image" src="https://github.com/user-attachments/assets/dc16ccfc-e21b-463d-a632-700b16d5d06e" />
-
-
+<img width="760" height="136" alt="image" src="https://github.com/user-attachments/assets/f41a8168-3061-4e3c-844a-5cd085a2996f" />
 
 ### Maven的安装步骤
-<img width="1280" height="615" alt="image" src="https://github.com/user-attachments/assets/82a272b9-ad68-4a1d-aeef-943329a0ed6b" />
+<img width="1280" height="615" alt="image" src="https://github.com/user-attachments/assets/713cd0a6-f478-4d39-9f5e-4500b038334e" />
 
+<img width="1280" height="903" alt="image" src="https://github.com/user-attachments/assets/bb857bc7-0fa1-48fa-b98c-4f5ebe30145b" />
 
-<img width="1280" height="903" alt="image" src="https://github.com/user-attachments/assets/9e7e89c4-fbac-43aa-bea8-56dbacb4ac33" />
-
-
-<img width="979" height="1023" alt="image" src="https://github.com/user-attachments/assets/9324d05c-5bf3-4c9d-93f4-710d4775a150" />
+<img width="979" height="1023" alt="image" src="https://github.com/user-attachments/assets/56bd369b-0b68-481d-8c3f-352cc5ac81a4" />
 
 ### 下载 Docker Desktop
 
